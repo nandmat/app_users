@@ -52,7 +52,8 @@ class User extends Authenticatable
                 $query->where('email', $search);
                 $query->orWhere('name', 'LIKE', "%{$search}%");
             }
-        })->get();
+        })->with('comments')
+        ->paginate(4);
 
         return $users;
     }
@@ -77,7 +78,10 @@ class User extends Authenticatable
             $user->update($data);
             return true;
         }
+    }
 
-
+    public function comments()
+    {
+        return $this->hasMany(Comment::class, 'user_id');
     }
 }
